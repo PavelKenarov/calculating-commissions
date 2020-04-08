@@ -1,0 +1,25 @@
+{
+    "name": "app/calculating-commissions",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Pavel Kenarov",
+            "email": "pavelkenarov1@gmail.com"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^7.0@dev",
+        "halaxa/json-machine": "^0.3.2",
+        "php": ">= 7.3.0",
+        "phpunit/phpunit": "^7"
+    },
+    "autoload": {
+        "psr-4": {
+            "vendor\\": "vendor/",
+            "App\\": "src/",
+            "Tests\\": "test/"
+        }
+    }
+}

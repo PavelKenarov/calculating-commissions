@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Exceptions;
+use App\AppConfig;
 
 class Context
 {
@@ -39,7 +40,7 @@ class Context
     {
         if (empty($file) || !is_file($file) || !fopen($file,'r'))
         {
-            throw new Exceptions\FileMissedException("Not found transaction file!");
+            throw new Exceptions\FileMissedException(AppConfig::$MISSING_FILE);
         }
 
         return $this->calculateCommissions($file);

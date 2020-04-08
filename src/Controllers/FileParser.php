@@ -3,6 +3,8 @@ namespace App\Controllers;
 
 use App\Services\GetExchangeRates;
 use App\Services\IsFromEu;
+use App\AppConfig;
+use GuzzleHttp\Exception\GuzzleException;
 use JsonMachine\JsonMachine;
 use App\Exceptions;
 use function JsonMachine\objects;
@@ -41,7 +43,7 @@ class FileParser extends File implements parser
      * @throws Exceptions\FileRowException
      * @throws Exceptions\GetBinException
      * @throws Exceptions\GetRateException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function doCalculations($file)
     {
@@ -53,10 +55,11 @@ class FileParser extends File implements parser
 
     /**
      * @param object $object
+     * @return string
      * @throws Exceptions\FileRowException
      * @throws Exceptions\GetBinException
      * @throws Exceptions\GetRateException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function output($object)
     {
@@ -66,9 +69,10 @@ class FileParser extends File implements parser
 
     /**
      * @param object $object
+     * @return string
      * @throws Exceptions\GetBinException
      * @throws Exceptions\GetRateException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function calculateAndPrint($object)
     {
@@ -77,7 +81,10 @@ class FileParser extends File implements parser
             $object->amount = bcdiv($object->amount, $rate, self::SCALE);
         }
 
-        return number_format(bcmul($object->amount, ($this->bin->check($object) ? 0.01 : 0.02), self::SCALE), 2);
+        $r = number_format(bcmul($object->amount, ($this->bin->check($object) ? AppConfig::$EU_TAX : AppConfig::$TAX), self::SCALE), AppConfig::$DECIMALS);
+
+        echo $r . "\n";
+        return $r;
     }
 
     /**
@@ -88,14 +95,11 @@ class FileParser extends File implements parser
     public function validateObject($object)
     {
         if(empty($object->bin) || empty($object->amount) || empty($object->currency))
-            throw new Exceptions\FileRowException("" . serialize($object));
+            throw new Exceptions\FileRowException(AppConfig::$NO_FILE . serialize($object));
 
-        if(!preg_match('/^[A-Z]{3}$/', $object->currency) )
-            throw new Exceptions\FileRowException("Invalid currency on row " . serialize($object));
+        if(!preg_match(AppConfig::$CURRENCY_REGEXP, $object->currency) )
+            throw new Exceptions\FileRowException(AppConfig::$CURRENCY_PR . serialize($object));
 
     }
 
 }
-
-
-

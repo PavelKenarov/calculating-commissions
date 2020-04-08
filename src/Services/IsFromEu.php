@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\AppConfig;
 use GuzzleHttp;
 use App\Exceptions;
 
@@ -16,11 +17,11 @@ class IsFromEu
     public function check($object)
     {
         $client = new GuzzleHttp\Client();
-        $res = json_decode($client->request('GET', 'https://lookup.binlist.net/' . $object->bin)->getBody()->getContents());
+        $res = json_decode($client->request('GET', AppConfig::$BIN_URL . $object->bin)->getBody()->getContents());
         if(!empty($res->country->alpha2))
-            return (in_array($res->country->alpha2, array('AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'EL', 'ES', 'FI', 'FR', 'GR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK')));
+            return (in_array($res->country->alpha2, AppConfig::$EU_COUNTRIES));
 
-        throw new Exceptions\GetBinException("Not find2 " . serialize($object));
+        throw new Exceptions\GetBinException(AppConfig::$BIN_EXCEPTION . serialize($object));
     }
 
 }

@@ -1,7 +1,8 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace App\Services;
 
+use App\AppConfig;
 use App\Exceptions;
 use GuzzleHttp;
 
@@ -15,15 +16,15 @@ class GetExchangeRates
      */
     public function getCurrencyRate($row)
     {
-        if($row->currency == "EUR")
+        if($row->currency == AppConfig::$NO_COMMISSION)
             return 0;
 
         $client = new GuzzleHttp\Client();
-        $res = json_decode($client->request('GET', 'https://api.exchangeratesapi.io/latest/')->getBody()->getContents(), true);
+        $res = json_decode($client->request('GET', AppConfig::$RATE_URL)->getBody()->getContents(), true);
         if(!empty($res['rates'][$row->currency]))
             return $res['rates'][$row->currency];
 
-        throw new Exceptions\GetRateException("Not find " . serialize($row));
+        throw new Exceptions\GetRateException(AppConfig::$RATE_EXCEPTION . serialize($row));
     }
 
 }

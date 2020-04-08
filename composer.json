@@ -13,7 +13,8 @@
         "guzzlehttp/guzzle": "^7.0@dev",
         "halaxa/json-machine": "^0.3.2",
         "php": ">= 7.3.0",
-        "phpunit/phpunit": "^7"
+        "phpunit/phpunit": "^7",
+        "ext-bcmath": "*"
     },
     "autoload": {
         "psr-4": {

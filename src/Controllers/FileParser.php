@@ -9,7 +9,7 @@ use JsonMachine\JsonMachine;
 use App\Exceptions;
 use function JsonMachine\objects;
 
-class FileParser extends File implements parser
+class FileParser extends File
 {
     /**
      * @var int

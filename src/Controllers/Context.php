@@ -1,31 +1,32 @@
 <?php
 namespace App\Controllers;
 
-use App\Exceptions;
 use App\AppConfig;
+use App\Exceptions;
 
 class Context
 {
     public $parser;
 
     /**
-     * @param parser $parser
+     * @param $parser
      */
-    public function __construct(parser $parser)
+    public function __construct($parser)
     {
         $this->parser = $parser;
     }
 
     /**
-     * @param parser $parser
+     * @param $parser
      */
-    public function setParser(parser $parser)
+    public function setParser($parser)
     {
         $this->parser = $parser;
     }
 
     /**
      * @param $file string
+     * @return float
      */
     public function calculateCommissions($file)
     {
@@ -34,6 +35,7 @@ class Context
 
     /**
      * @param $file string
+     * @return string
      * @throws Exceptions\FileMissedException
      */
     public function start($file)
